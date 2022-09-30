@@ -7,6 +7,13 @@ public class BankDetailsPojo {
 	private String bank_name;
 	private String display_name;
 	private String upi_id;
+	private int reward;
+	public int getReward() {
+		return reward;
+	}
+	public void setReward(int reward) {
+		this.reward = reward;
+	}
 	private double balance;
 	public String getMailid() {
 		return mailid;
@@ -20,7 +27,7 @@ public class BankDetailsPojo {
 	public void setAcc_number(String acc_number) {
 		this.acc_number = acc_number;
 	}
-	public BankDetailsPojo(String mailid, String acc_number, String ifsc_code, String bank_name, String display_name, String upi_id, double balance) {
+	public BankDetailsPojo(String mailid, String acc_number, String ifsc_code, String bank_name, String display_name, String upi_id, double balance,int reward) {
 		super();
 		this.mailid = mailid;
 		this.acc_number = acc_number;
@@ -29,6 +36,7 @@ public class BankDetailsPojo {
 		this.display_name = display_name;
 		this.upi_id = upi_id;
 		this.balance = balance;
+		this.reward=reward;
 	}
 	public String getIfsc_code() {
 		return ifsc_code;

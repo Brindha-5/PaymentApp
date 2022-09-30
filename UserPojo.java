@@ -2,14 +2,21 @@
 package com.zlabs;
 
 public class UserPojo {
-	public UserPojo(String user_name, String mail_id, String password) {
+	public UserPojo(String user_name, String mail_id, String password,String invite_code) {
 		super();
 		this.user_name = user_name;
 		this.mail_id = mail_id;
 		this.password = password;
-		//this.invitecode=invitecode;
+		this.invite_code=invite_code;
 	}
 	private String user_name;
+	private String invite_code;
+	public String getInvite_code() {
+		return invite_code;
+	}
+	public void setInvite_code(String invite_code) {
+		this.invite_code = invite_code;
+	}
 	public String getUser_name() {
 		return user_name;
 	}
@@ -29,14 +36,8 @@ public class UserPojo {
 		this.password = password;
 	}
 	private String mail_id;
-	public int getInvitecode() {
-		return invitecode;
-	}
-	public void setInvitecode(int invitecode) {
-		this.invitecode = invitecode;
-	}
 	private String password;
-	private int invitecode;
+	
 	
 
 }

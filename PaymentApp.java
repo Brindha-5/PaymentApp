@@ -12,6 +12,7 @@ public class PaymentApp {
 	ArrayList<UserPojo> user_registration=new ArrayList<>();
 	ArrayList<BankDetailsPojo> bank_details=new ArrayList<>();
 	ArrayList<TransactionLogsPojo> transaction_log=new ArrayList<>();
+	int codenum=1;
 	public void welcomePage()
 	{
 		
@@ -68,18 +69,23 @@ public class PaymentApp {
 	 public void addUser()
 	 {
 		 //user_registration.add(101,new UserPojo("brindha","br@gmail.com","kio*7Yjkl"));
-		 user_registration.add(new UserPojo("brindha","br@gmail.com","kio*7Yjkl"));
-		 user_registration.add(new UserPojo("akila","ak@gmail.com","pio*7Yjkl"));
-		 user_registration.add(new UserPojo("pooja","po@gmail.com","uio*7Yjyj"));
-		 user_registration.add(new UserPojo("elakkiya","el@gmail.com","uio*7uytkl"));
-		 user_registration.add(new UserPojo("sreeja","sr@gmail.com","uio*7Yjklop"));
+		 user_registration.add(new UserPojo("brindha","br@gmail.com","kio*7Yjkl","br01"));
+		 user_registration.add(new UserPojo("akila","ak@gmail.com","pio*7Yjkl","ak02"));
+		 user_registration.add(new UserPojo("pooja","po@gmail.com","uio*7Yjyj","po02"));
+		 user_registration.add(new UserPojo("elakkiya","el@gmail.com","uio*7uytkl","el05"));
+		 user_registration.add(new UserPojo("sreeja","sr@gmail.com","uio*7Yjklop","sr08"));
+		 bank_details.add(new BankDetailsPojo("br@gmail.com","abc123","abc","canarabank","bindhu","bindhu@canarabank",5000,0));
+		 bank_details.add(new BankDetailsPojo("ak@gmail.com","ghj567","ghj","icicibank","aki","aki@icicibank",10000,0));
+		 bank_details.add(new BankDetailsPojo("po@gmail.com","ads555","ads","Indianbank","poo","poo@Indianbank",6000,0));
+		 bank_details.add(new BankDetailsPojo("el@gmail.com","uyw243","uyj","LVbank","ela","ela@LVbank",2000,0));
+		 bank_details.add(new BankDetailsPojo("sr@gmail.com","jkl999","jkl","Mahindrabank","sree","sree@Mahindrabank",7000,0));
 		 welcomePage();
 		 
 	 }
 	 public void userRegistration()
 	 {
-		 String name,mail_id,password;
-			int referral_code,invite_code,ref_option;
+		 String name,mail_id,referral_code,invite_code,password,ref_mailid=null;
+			int ref_option;
 		boolean reg=true;
 		 System.out.println("Enter Your Name");
 			name=input.next();
@@ -93,14 +99,39 @@ public class PaymentApp {
 					reg=false;
 				}
 			}
-			
-		/*	System.out.println("Do you have any referral code if yes press 1,no press 0");
+				System.out.println("Do you have any referral code if yes press 1,no press 0");
 			ref_option=input.nextInt();
 			if(ref_option==1)
 			{
 				System.out.println("Enter Referral code");
-				referral_code=input.nextInt();
-			}*/
+				referral_code=input.next();
+				boolean ref_flag=false;
+				for(int i=0;i<user_registration.size();i++)
+				{
+					if(user_registration.get(i).getInvite_code().equals(referral_code))
+					{
+						ref_flag=true;
+						ref_mailid=user_registration.get(i).getMail_id();
+					}
+					if(ref_flag)
+					{
+						 for(int j=0;j<bank_details.size();j++)
+						 {
+							 if(bank_details.get(j).getMailid().equals(ref_mailid))
+							 {
+								double amt=bank_details.get(j).getBalance();
+								int ref_amt=bank_details.get(j).getReward();
+								bank_details.get(j).setReward(ref_amt+50);
+								bank_details.get(j).setBalance(amt+50);
+								break;
+								 
+							 }
+						 }
+						 break;
+					}
+				}
+				
+			}
 			if(reg)
 			{
 			System.out.println("Enter your password");
@@ -109,11 +140,11 @@ public class PaymentApp {
 			boolean valid=passWordVerification(password);
 			if(valid)
 			{
-				//System.out.println("valid");
-				//System.out.println("Enter your invite_code");
-				//invite_code=input.nextInt();
-				user_registration.add(new UserPojo(name,mail_id,password));
+				
 				System.out.println("User Registration is successfully Completed");
+				String substring = name.substring(2);
+				invite_code=substring+codenum++;
+				user_registration.add(new UserPojo(name,mail_id,password,invite_code));
 				
 		 }
 			else
@@ -181,6 +212,20 @@ public class PaymentApp {
 		 case 2:
 			 toPay(mailid);
 			 break;
+		 case 3:
+			 toInvite(mailid);
+			 break;
+		 case 4:
+			 break;
+		 case 5:
+			 break;
+		 case 6:
+			 System.out.println("Thanks for Choosing and using our App");
+			 break;
+			 default:
+				 System.out.println("Please check your input");
+				 userMenu(mailid);
+				 
 		 }
 		 
 	 }
@@ -231,6 +276,7 @@ public class PaymentApp {
 			 {
 				 System.out.println("This account number is already registered");
 				 acc_valid=false;
+				 toAddAccountDetails(mailid);
 			 }
 		 }
 		 if(acc_valid)
@@ -255,7 +301,7 @@ public class PaymentApp {
 		 balance=input.nextDouble();
 		 upi_id=display_name+"@"+bank_name;
 		 System.out.println("Your UPI_ID is"+upi_id);
-		 bank_details.add(new BankDetailsPojo(mailid,acc_no,IFSC_code,bank_name,display_name,upi_id,balance));
+		 bank_details.add(new BankDetailsPojo(mailid,acc_no,IFSC_code,bank_name,display_name,upi_id,balance,0));
 		 System.out.println("Your Account is Added Successfully");
 		 System.out.println("Do you want to continue yes-1/no-0");
 		 int con=input.nextInt();
@@ -515,9 +561,67 @@ public void payViaBankAccount(String mailid)
 	userMenu(mailid);
  		 
  	 }
-      
+
+public void toInvite(String mailid)
+{
+	System.out.println("**************************************************************");
+	System.out.println("1.Show invitecode");
+	System.out.println("2.view Rewards amount");
+	System.out.println("3.Go Back");
+	System.out.println("Enter your choice");
+	int choice=input.nextInt();
+	switch(choice)
+	{
+	case 1:
+		toShowInviteCode(mailid);
+		break;
+	case 2:
+		toViewRewardAmount(mailid);
+		break;
+	case 3:
+		userMenu(mailid);
+		break;
+		default:
+			System.out.println("Please Check your input");
+			toInvite(mailid);
+	}
 	
 }
+public void toShowInviteCode(String mailid)
+{
+	System.out.println("********************************************************************");
+	for(int i=0;i<user_registration.size();i++)
+	{
+		if(user_registration.get(i).getMail_id().equals(mailid))
+		{
+			System.out.println("Your Referrel code is"+user_registration.get(i).getInvite_code());
+		}
+		
+ }
+	userMenu(mailid);
+	
+}
+public void toViewRewardAmount(String mailid)
+{
+	System.out.println("********************************************************************");
+	 int reward_amt=0;
+	 for(int i=0;i<bank_details.size();i++)
+	 {
+		 if(bank_details.get(i).getMailid().equals(mailid))
+		 {
+			 reward_amt=reward_amt+bank_details.get(i).getReward();
+		 }
+		 
+		 }
+	 System.out.println("Your total Reward amount is"+reward_amt);
+	 userMenu(mailid);
+		
+ }
+	
+}
+      
+	
+
 	
 
 

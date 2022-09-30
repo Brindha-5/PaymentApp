@@ -178,7 +178,9 @@ public class PaymentApp {
 		 case 1:
 			 toAddBankAccount(mailid);
 			 break;
-			 
+		 case 2:
+			 toPay(mailid);
+			 break;
 		 }
 		 
 	 }
@@ -237,6 +239,16 @@ public class PaymentApp {
 		 IFSC_code=input.next();
 		 System.out.println("Enter your Display name");
 		 display_name=input.next();
+		 
+		 for(int i=0;i<bank_details.size();i++)
+		 {
+			 if(bank_details.get(i).getDisplay_name().equals(display_name))
+			 {
+				 System.out.println("Please try with different name");
+				 toAddAccountDetails(mailid);
+
+			 }
+		 }
 		 System.out.println("Enter your Bank name");
 		 bank_name=input.next();
 		 System.out.println("Enter your account balance");
@@ -264,12 +276,22 @@ public class PaymentApp {
 		 String acc_no;
 		 System.out.println("Enter your Account number to check balance");
 		 acc_no=input.next();
+		 boolean flag=true;
 		 for(int i=0;i<bank_details.size();i++)
 		 {
 			 if(bank_details.get(i).getAcc_number().equals(acc_no)&&bank_details.get(i).getMailid().equals(mailid))
 			 {
 				 System.out.println("Your available balance is :"+bank_details.get(i).getBalance());
+				 flag=false;
+				 toAddBankAccount(mailid);
+				 
 			 }
+		 }
+		 if(flag)
+		 {
+			 System.out.println("Please check your account number");
+			
+			 toAddBankAccount(mailid);
 		 }
 		 
 	 }
@@ -310,6 +332,7 @@ public class PaymentApp {
 		      SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
 		       String datestr= formatter.format(date);
 		       transaction_log.add(new TransactionLogsPojo(mailid,acc_no,"Deposit",amount,datestr));
+		       toAddBankAccount(mailid);
 			 
 			 
 		 }
@@ -346,6 +369,156 @@ public class PaymentApp {
 		 }
 	 
 }
-
-
+public void toPay(String mailid)
+{
+	System.out.println("************************************");
+	System.out.println("Select your Payment method");
+	System.out.println(	"1.Pay via UPI");
+	System.out.println("2.Pay via BankAccount");
+	System.out.println("3.Go back");
+	System.out.println("Enter your choice");
+	int choice=input.nextInt();
+	
+switch(choice)
+{
+case 1:
+	payViaUPI(mailid);
+	break;
+case 2:
+	payViaBankAccount(mailid);
+	break;
+case 3:
+	userMenu(mailid);
+	break;
+case 4:
+	System.out.println("Please check your option");
+	
 }
+}
+public void payViaUPI(String mailid)
+{
+	String acc_no,upi_id,bank_acc,ifsc_code;
+	double amt,balance=0;
+	
+	System.out.println("*********************************************");
+	System.out.println("Enter your account number");
+	acc_no=input.next();
+	System.out.println("Enter the amount to pay");
+	 amt=input.nextDouble();
+	  boolean flag=false;
+	 for(int i=0;i<bank_details.size();i++)
+	 {
+		 if(bank_details.get(i).getAcc_number().equals(acc_no)&&bank_details.get(i).getMailid().equals(mailid))
+		 {
+			 flag=true;
+			 if(bank_details.get(i).getBalance()<amt)
+			 {
+				 System.out.println("You are not having sufficient amount to pay");
+				 userMenu(mailid);
+			 }
+			 else
+			 {
+				 balance=balance=bank_details.get(i).getBalance();
+				 balance=balance-amt;
+				 bank_details.get(i).setBalance(balance);
+			 }
+		 }
+	 }
+	 Date date = new Date();
+     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+      String datestr= formatter.format(date);
+	 if(flag)
+	 {
+		 System.out.println("Enter UPI_ID");
+		 upi_id=input.next();
+		 boolean  upi=true;
+		 for(int i=0;i<bank_details.size();i++)
+		 {
+			 if(bank_details.get(i).getUpi_id().equals(upi_id))
+			 {
+				 upi=false;
+				 balance=bank_details.get(i).getBalance();
+				 balance=balance+amt;
+				 bank_details.get(i).setBalance(balance);
+				 System.out.println("Successfully paid");
+				 
+			     transaction_log.add(new TransactionLogsPojo(mailid,acc_no,"pay via upi",amt,datestr));
+			     toAddBankAccount(mailid);
+			 }
+		 }
+		 
+		if(upi)
+		{
+			System.out.println("Successfully paid");
+			 transaction_log.add(new TransactionLogsPojo(mailid,acc_no,"pay via upi",amt,datestr));
+			 toAddBankAccount(mailid);
+		}
+		 
+		 }
+}
+public void payViaBankAccount(String mailid)
+{
+	String acc_no,bank_acc,ifsc_code;
+	double amt,balance=0;
+	
+	System.out.println("*********************************************");
+	System.out.println("Enter your account number");
+	acc_no=input.next();
+	System.out.println("Enter the amount to pay");
+	 amt=input.nextDouble();
+	  boolean flag=false;
+	 for(int i=0;i<bank_details.size();i++)
+	 {
+		 if(bank_details.get(i).getAcc_number().equals(acc_no)&&bank_details.get(i).getMailid().equals(mailid))
+		 {
+			 flag=true;
+			 if(bank_details.get(i).getBalance()<amt)
+			 {
+				 System.out.println("You are not having sufficient amount to pay");
+				 userMenu(mailid);
+			 }
+			 else
+			 {
+				 balance=balance=bank_details.get(i).getBalance();
+				 balance=balance-amt;
+				 bank_details.get(i).setBalance(balance);
+			 }
+		 }
+	 }
+	 Date date = new Date();
+     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+      String datestr= formatter.format(date);
+      System.out.println("Enter the account number");
+      bank_acc=input.next();
+      System.out.println("Enter the IFSC_code");
+      ifsc_code=input.next();
+      boolean acc_flag=true;
+      for(int i=0;i<bank_details.size();i++)
+ 	 {
+ 		 if(bank_details.get(i).getAcc_number().equals(bank_acc)&&bank_details.get(i).getIfsc_code().equals(ifsc_code))
+ 		 {
+ 			 acc_flag=false;
+ 			 balance=balance=bank_details.get(i).getBalance();
+			 balance=balance+amt;
+			 bank_details.get(i).setBalance(balance);
+			 System.out.println("Successfully paid");
+			 
+		     transaction_log.add(new TransactionLogsPojo(mailid,acc_no,"pay via BankAccount number",amt,datestr));
+		 }
+	 }
+	 
+	if(acc_flag)
+	{
+		System.out.println("Successfully paid");
+		 transaction_log.add(new TransactionLogsPojo(mailid,acc_no,"pay via BankAccount number",amt,datestr));
+	}
+	userMenu(mailid);
+ 		 
+ 	 }
+      
+	
+}
+	
+
+
+

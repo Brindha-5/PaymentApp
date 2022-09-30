@@ -1,5 +1,6 @@
 package com.zlabs;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +14,7 @@ public class PaymentApp {
 	ArrayList<BankDetailsPojo> bank_details=new ArrayList<>();
 	ArrayList<TransactionLogsPojo> transaction_log=new ArrayList<>();
 	int codenum=1;
-	public void welcomePage()
+	public void welcomePage() throws ParseException
 	{
 		
 	 System.out.println("******* Welcome to ZOHO Payment App  ********");
@@ -66,7 +67,7 @@ public class PaymentApp {
 		return m.matches();
 	}
 	 
-	 public void addUser()
+	 public void addUser() throws ParseException
 	 {
 		 //user_registration.add(101,new UserPojo("brindha","br@gmail.com","kio*7Yjkl"));
 		 user_registration.add(new UserPojo("brindha","br@gmail.com","kio*7Yjkl","br01"));
@@ -79,6 +80,10 @@ public class PaymentApp {
 		 bank_details.add(new BankDetailsPojo("po@gmail.com","ads555","ads","Indianbank","poo","poo@Indianbank",6000,0));
 		 bank_details.add(new BankDetailsPojo("el@gmail.com","uyw243","uyj","LVbank","ela","ela@LVbank",2000,0));
 		 bank_details.add(new BankDetailsPojo("sr@gmail.com","jkl999","jkl","Mahindrabank","sree","sree@Mahindrabank",7000,0));
+		 transaction_log.add(new TransactionLogsPojo("br@gmail.com","abc123","pay via BankAccount number",200,"22/08/27 09:29:58"));
+		 transaction_log.add(new TransactionLogsPojo("ak@gmail.com","ghj567","pay via BankAccount number",500,"22/09/23 09:29:58"));
+		 transaction_log.add(new TransactionLogsPojo("br@gmail.com","abc123","Deposit",700,"22/09/25 09:29:58"));
+		 transaction_log.add(new TransactionLogsPojo("br@gmail.com","abc123","pay via UPI_ID",200,"22/08/25 09:29:58"));
 		 welcomePage();
 		 
 	 }
@@ -157,11 +162,16 @@ public class PaymentApp {
 			int option_continue=input.nextInt();
 			if(option_continue==1)
 			{
-				welcomePage();
+				try {
+					welcomePage();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			
 		}
-	 public void userLogin()
+	 public void userLogin() throws ParseException
 	 {
 		 String mailid,password;
 		 boolean login=true;
@@ -193,7 +203,7 @@ public class PaymentApp {
 		 }
 		
 	 }
-	 public void userMenu(String mailid)
+	 public void userMenu(String mailid) throws ParseException
 	 {
 		 System.out.println("**********************************");
 		 System.out.println("1.Bank Accounts");
@@ -216,6 +226,7 @@ public class PaymentApp {
 			 toInvite(mailid);
 			 break;
 		 case 4:
+			 toViewTransactionHistory(mailid);
 			 break;
 		 case 5:
 			 break;
@@ -254,7 +265,12 @@ public class PaymentApp {
 			 toRemoveAccount(mailid);
 			 break;
 		 case 5:
-			 userMenu(mailid);
+			 try {
+				userMenu(mailid);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			 break;
 		 default:
 			 System.out.println("Please check your choice");
@@ -307,7 +323,12 @@ public class PaymentApp {
 		 int con=input.nextInt();
 		 if(con==1)
 		 {
-			 userMenu(mailid);
+			 try {
+				userMenu(mailid);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		 }
 		 else {
 			 System.out.println("Thanks for using our App");
@@ -375,7 +396,7 @@ public class PaymentApp {
 			 System.out.println("The amount is successfully added to your account");
 			 System.out.println("The current balance in your account is"+balance);
 			 Date date = new Date();
-		      SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+		      SimpleDateFormat formatter = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
 		       String datestr= formatter.format(date);
 		       transaction_log.add(new TransactionLogsPojo(mailid,acc_no,"Deposit",amount,datestr));
 		       toAddBankAccount(mailid);
@@ -385,7 +406,12 @@ public class PaymentApp {
 		 else
 		 {
 			 System.out.println("Please check your account number");
-			 userMenu(mailid);
+			 try {
+				userMenu(mailid);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		 }
 		 
 		 
@@ -415,7 +441,7 @@ public class PaymentApp {
 		 }
 	 
 }
-public void toPay(String mailid)
+public void toPay(String mailid) throws ParseException
 {
 	System.out.println("************************************");
 	System.out.println("Select your Payment method");
@@ -460,7 +486,12 @@ public void payViaUPI(String mailid)
 			 if(bank_details.get(i).getBalance()<amt)
 			 {
 				 System.out.println("You are not having sufficient amount to pay");
-				 userMenu(mailid);
+				 try {
+					userMenu(mailid);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			 }
 			 else
 			 {
@@ -471,7 +502,7 @@ public void payViaUPI(String mailid)
 		 }
 	 }
 	 Date date = new Date();
-     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+     SimpleDateFormat formatter = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
       String datestr= formatter.format(date);
 	 if(flag)
 	 {
@@ -502,7 +533,7 @@ public void payViaUPI(String mailid)
 		 
 		 }
 }
-public void payViaBankAccount(String mailid)
+public void payViaBankAccount(String mailid) throws ParseException
 {
 	String acc_no,bank_acc,ifsc_code;
 	double amt,balance=0;
@@ -521,7 +552,12 @@ public void payViaBankAccount(String mailid)
 			 if(bank_details.get(i).getBalance()<amt)
 			 {
 				 System.out.println("You are not having sufficient amount to pay");
-				 userMenu(mailid);
+				 try {
+					userMenu(mailid);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			 }
 			 else
 			 {
@@ -532,7 +568,7 @@ public void payViaBankAccount(String mailid)
 		 }
 	 }
 	 Date date = new Date();
-     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+     SimpleDateFormat formatter = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
       String datestr= formatter.format(date);
       System.out.println("Enter the account number");
       bank_acc=input.next();
@@ -579,7 +615,12 @@ public void toInvite(String mailid)
 		toViewRewardAmount(mailid);
 		break;
 	case 3:
-		userMenu(mailid);
+		try {
+			userMenu(mailid);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		break;
 		default:
 			System.out.println("Please Check your input");
@@ -598,7 +639,12 @@ public void toShowInviteCode(String mailid)
 		}
 		
  }
-	userMenu(mailid);
+	try {
+		userMenu(mailid);
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	
 }
 public void toViewRewardAmount(String mailid)
@@ -614,10 +660,110 @@ public void toViewRewardAmount(String mailid)
 		 
 		 }
 	 System.out.println("Your total Reward amount is"+reward_amt);
-	 userMenu(mailid);
+	 try {
+		userMenu(mailid);
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 		
  }
+public void toViewTransactionHistory(String mailid) throws ParseException
+{  
+
+int choice;
+
+	System.out.println("********************************************************************");
+	System.out.println("1.Toview last 7days transaction");
+	System.out.println("2.Toview last 14days transaction");
+	System.out.println("3.Toview last 30days transaction");
+	System.out.println("4.Toview All transaction");
+	System.out.println("5.Go Back");
+	System.out.println("Enter your choice");
+	choice=input.nextInt();
+	switch(choice)
+	{
+	case 1:
+		toViewdaysTransaction(mailid);
+		break;
+	case 2:
+		toViewdaysTransaction(mailid);
+		break;
+	case 3:
+		toViewdaysTransaction(mailid);
+		break;
+	case 4:
+		toViewAllTransaction(mailid);
+		break;
+	case 5:
+		userMenu(mailid);
+		
+	}
+}
+public void toViewAllTransaction(String mailid)
+{
+	String acc_no;
+	System.out.println("Enter Account number to check transaction History");
+	acc_no=input.next();
+	System.out.println("--------------------------------------------------------------------");
+	System.out.println("MAIL_ID     ACC_NUM     AMOUNT      DATE      DESCEIPTION");
+	System.out.println("--------------------------------------------------------------------");
+	for(int i=0;i<transaction_log.size();i++)
+	 {
+		 if(transaction_log.get(i).getAcc_no().equals(acc_no)&&transaction_log.get(i).getMailid().equals(mailid))
+		 {
+			 System.out.println(transaction_log.get(i).getMailid()+"     "+transaction_log.get(i).getAcc_no()+"    "+transaction_log.get(i).getAmt()+"      "+transaction_log.get(i).getDate()+"     "+transaction_log.get(i).getTransaction_type());
+		 }
+		 
+		 }
+	System.out.println("--------------------------------------------------------------------");
 	
+	try {
+		userMenu(mailid);
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+public void toViewdaysTransaction(String mailid) throws ParseException
+{
+	String acc_no;
+	long day;
+	System.out.println("Enter Account number to check transaction History");
+	String date=null;
+	acc_no=input.next();
+	 Date curdate = new Date();
+     SimpleDateFormat formatter = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+      String curr_date= formatter.format(curdate);
+      Date current_date=formatter.parse(curr_date);
+      Date trans_date=null;
+      long diff;
+      long days = 0;
+      System.out.println("Enter the number of days");
+      day=input.nextInt();
+	for(int i=0;i<transaction_log.size();i++)
+	 {
+		 if(transaction_log.get(i).getAcc_no().equals(acc_no)&&transaction_log.get(i).getMailid().equals(mailid))
+		 {
+			 date=transaction_log.get(i).getDate();
+			 trans_date=formatter.parse(date);
+			 diff=current_date.getTime()-trans_date.getTime();
+			 days=(diff/(60 * 60 * 1000))/24;
+		 }
+	if(days<=day)
+	{
+		System.out.println("--------------------------------------------------------------------");
+		System.out.println("MAIL_ID     ACC_NUM     AMOUNT      DATE      DESCRIPTION");
+		System.out.println("--------------------------------------------------------------------");
+		 System.out.println(transaction_log.get(i).getMailid()+"     "+transaction_log.get(i).getAcc_no()+"    "+transaction_log.get(i).getAmt()+"      "+transaction_log.get(i).getDate()+"     "+transaction_log.get(i).getTransaction_type());
+			
+		
+	}
+}
+
+}
+
 }
       
 	
